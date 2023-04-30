@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ $# -ne 2 ]; then
-  echo "Usage: [source dir] [destination dir]"
+  echo "Usage:"
+  echo "$0 [source dir] [destination dir]"
   exit 1
 fi
 
