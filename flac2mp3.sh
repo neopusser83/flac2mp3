@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# MP3 quality
+LAME_VARIABLE_BITRATE=4
+# Enable  VBR  (Variable  BitRate)  and specifies the value of VBR
+# quality (default = 4). Decimal values  can  be  specified,  like 4.51.
+# 0 = highest quality.
+
+
 if [ $# -ne 2 ]; then
   echo "Usage:"
   echo "$0 [source dir] [destination dir]"
@@ -8,8 +15,6 @@ fi
 
 SOURCE_DIR=$1
 DESTINATION_DIR=$2
-
-ID3V2=4
 
 
 FLAC_QUANT=0
@@ -56,7 +61,7 @@ do
   TRACKNUMBER=$(metaflac "${FLAC_FILES[$i]}" --show-tag=TRACKNUMBER | sed s/.*=//g)
   DATE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=DATE | sed s/.*=//g)
 
-  flac -c -d -s "${FLAC_FILES[$i]}" | lame -V0 --add-id3v2 --pad-id3v2 --ignore-tag-errors \
+  flac -c -d -s "${FLAC_FILES[$i]}" | lame -V$LAME_VARIABLE_BITRATE --add-id3v2 --pad-id3v2 --ignore-tag-errors \
     --ta "$ARTIST" --tt "$TITLE" --tl "$ALBUM"  --tg "${GENRE:-12}" \
     --tn "${TRACKNUMBER:-0}" --ty "$DATE" - "$DESTINATION_DIR/${MP3_FILES[$i]}"
 
@@ -75,7 +80,7 @@ do
   TRACKNUMBER=$(metaflac "${FLAC_FILES[$i]}" --show-tag=TRACKNUMBER | sed s/.*=//g)
   DATE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=DATE | sed s/.*=//g)
 
-  flac -c -d -s "${FLAC_FILES[$i]}" | lame -V0 --add-id3v2 --pad-id3v2 --ignore-tag-errors \
+  flac -c -d -s "${FLAC_FILES[$i]}" | lame -V$LAME_VARIABLE_BITRATE --add-id3v2 --pad-id3v2 --ignore-tag-errors \
     --ta "$ARTIST" --tt "$TITLE" --tl "$ALBUM"  --tg "${GENRE:-12}" \
     --tn "${TRACKNUMBER:-0}" --ty "$DATE" - "$DESTINATION_DIR/${MP3_FILES[$i]:1}"
 
