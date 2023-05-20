@@ -23,7 +23,7 @@ tail -f log
 ```
 
 ## Important
-Please check the LAME_VARIABLE_BITRATE variable in the script file for set a different MP3 audio quality
+Please check the LAME_VARIABLE_BITRATE variable in the script file to set a different MP3 audio quality
 
 ## A couple of things
 No metadata lyrics support.
