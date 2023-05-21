@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # MP3 quality
-LAME_VARIABLE_BITRATE=4
+LAME_VARIABLE_BITRATE=4.1
 # Enable  VBR  (Variable  BitRate)  and specifies the value of VBR
 # quality (default = 4). Decimal values  can  be  specified,  like 4.51.
 # 0 = highest quality.
@@ -54,16 +54,25 @@ do
 
 ###
 
-  ARTIST=$(metaflac "${FLAC_FILES[$i]}" --show-tag=ARTIST | sed s/.*=//g)
+  ARTIST=$(metaflac "${FLAC_FILES[$i]}" --show-tag=ARTIST | sed s/.*=//g | head -n 1)
   TITLE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=TITLE | sed s/.*=//g)
   ALBUM=$(metaflac "${FLAC_FILES[$i]}" --show-tag=ALBUM | sed s/.*=//g)
   GENRE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=GENRE | sed s/.*=//g)
   TRACKNUMBER=$(metaflac "${FLAC_FILES[$i]}" --show-tag=TRACKNUMBER | sed s/.*=//g)
   DATE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=DATE | sed s/.*=//g)
+  DISCNUMBER=$(metaflac "${FLAC_FILES[$i]}" --show-tag=DISCNUMBER | sed s/.*=//g) ##
+  LYRICS=$(metaflac "${FLAC_FILES[$i]}" --show-tag=LYRICS | sed s/.*=//g)
 
   flac -c -d -s "${FLAC_FILES[$i]}" | lame -V$LAME_VARIABLE_BITRATE --add-id3v2 --pad-id3v2 --ignore-tag-errors \
     --ta "$ARTIST" --tt "$TITLE" --tl "$ALBUM"  --tg "${GENRE:-12}" \
     --tn "${TRACKNUMBER:-0}" --ty "$DATE" - "$DESTINATION_DIR/${MP3_FILES[$i]}"
+
+######
+   id3v2 --USLT "$LYRICS" "$DESTINATION_DIR/${MP3_FILES[$i]}"
+   id3v2 --TPOS "$DISCNUMBER" "$DESTINATION_DIR/${MP3_FILES[$i]}"
+#####
+
+
 
 #	ffmpeg -i "${FLAC_FILES[$i]}" -ab 320k -map_metadata 0 -id3v2_version "$ID3V2" "$DESTINATION_DIR/${MP3_FILES[$i]}" -y
 
@@ -73,22 +82,30 @@ do
 
 ###
 
- ARTIST=$(metaflac "${FLAC_FILES[$i]}" --show-tag=ARTIST | sed s/.*=//g)
+ ARTIST=$(metaflac "${FLAC_FILES[$i]}" --show-tag=ARTIST | sed s/.*=//g | head -n 1)
   TITLE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=TITLE | sed s/.*=//g)
   ALBUM=$(metaflac "${FLAC_FILES[$i]}" --show-tag=ALBUM | sed s/.*=//g)
   GENRE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=GENRE | sed s/.*=//g)
   TRACKNUMBER=$(metaflac "${FLAC_FILES[$i]}" --show-tag=TRACKNUMBER | sed s/.*=//g)
   DATE=$(metaflac "${FLAC_FILES[$i]}" --show-tag=DATE | sed s/.*=//g)
+  DISCNUMBER=$(metaflac "${FLAC_FILES[$i]}" --show-tag=DISCNUMBER | sed s/.*=//g) ##
+  LYRICS=$(metaflac "${FLAC_FILES[$i]}" --show-tag=LYRICS | sed s/.*=//g)
+
 
   flac -c -d -s "${FLAC_FILES[$i]}" | lame -V$LAME_VARIABLE_BITRATE --add-id3v2 --pad-id3v2 --ignore-tag-errors \
     --ta "$ARTIST" --tt "$TITLE" --tl "$ALBUM"  --tg "${GENRE:-12}" \
     --tn "${TRACKNUMBER:-0}" --ty "$DATE" - "$DESTINATION_DIR/${MP3_FILES[$i]:1}"
 
-
+######
+   id3v2 --USLT "$LYRICS" "$DESTINATION_DIR/${MP3_FILES[$i]:1}"
+   id3v2 --TPOS "$DISCNUMBER" "$DESTINATION_DIR/${MP3_FILES[$i]:1}"
+#####
+   
 #	ffmpeg -i "${FLAC_FILES[$i]}" -ab 320k -map_metadata 0 -id3v2_version "$ID3V2" "$DESTINATION_DIR/${MP3_FILES[$i]:1}" -y
 ###
 	fi
 
+## useless
 	if [[ $? -ne 0 ]]; then
 	let "ERROR_FILES++"
 		if [[ i -eq 0 ]] then

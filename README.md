@@ -6,9 +6,9 @@ Copy entire directories recursively, converting flac files to mp3, "without meta
 - flac
 - lame
 - rsync
-
+- id3v2
 ```
-apt install flac lame rsync
+apt install flac lame rsync id3v2
 ```
 
 ## Usage
@@ -26,7 +26,6 @@ tail -f log
 Please check the LAME_VARIABLE_BITRATE variable in the script file to set a different MP3 audio quality
 
 ## A couple of things
-No metadata lyrics support.
 This script is similar to running "cp -rv source/* dest/" converting the FLAC files to MP3.
 Please consider the "source/*" because when using this script, it copies all the contents inside the specified folder, and not the source folder directly.
 
