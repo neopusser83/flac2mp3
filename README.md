@@ -6,9 +6,9 @@ Copy entire directories recursively, converting flac files to mp3, "without meta
 - flac
 - lame
 - rsync
-- id3v2
+- eyeD3
 ```
-apt install flac lame rsync id3v2
+apt install flac lame rsync eyed3
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ apt install flac lame rsync id3v2
 
 ## Log support
 for more details about the conversion, during script execution check the log file:
-```
+```bash
 tail -f log
 ```
 
